@@ -28,6 +28,7 @@
                         <action selector="toggleClicked:" target="UUM-bt-YrR" id="S6I-Gt-ahO"/>
                     </connections>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="Z92-IV-3YN"/>
                 <menuItem title="Quit" id="sBB-9G-9Vr">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
