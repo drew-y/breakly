@@ -21,12 +21,19 @@ class StatusMenuController: NSObject, NSUserNotificationCenterDelegate {
     let note = NSUserNotification()
     note.title = "Time for a break"
     note.informativeText = "You've been sitting for 20 minutes"
-    note.actionButtonTitle = "Ok"
-    note.hasActionButton = true
     note.deliveryDate = Date(timeIntervalSinceNow: 0)
+    note.hasActionButton = true
+    note.actionButtonTitle = "Done"
+    note.otherButtonTitle = "Ignore"
 
     notificationCenter.removeAllDeliveredNotifications()
     notificationCenter.deliver(note)
+  }
+  
+  func startTimer() {
+    timer = Timer.scheduledTimer(timeInterval: 1200, target: self, selector: #selector(StatusMenuController.sendNote), userInfo: nil, repeats: true)
+    
+    RunLoop.main.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
   }
   
   func toggle() {
@@ -35,14 +42,18 @@ class StatusMenuController: NSObject, NSUserNotificationCenterDelegate {
       toggleMenuItem.title = "Turn On"
     } else {
       toggleMenuItem.title = "Turn Off"
-      timer = Timer.scheduledTimer(timeInterval: 1200.0, target: self, selector: #selector(StatusMenuController.sendNote), userInfo: nil, repeats: true)
-
-      RunLoop.main.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+      startTimer()
     }
   }
   
   func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
     return true
+  }
+  
+  func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+    notificationCenter.removeAllDeliveredNotifications()
+    timer.invalidate()
+    startTimer()
   }
   
   override func awakeFromNib() {
