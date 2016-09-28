@@ -9,7 +9,7 @@
 
 import Cocoa
 
-class StatusMenuController: NSObject {
+class StatusMenuController: NSObject, NSUserNotificationCenterDelegate {
   @IBOutlet weak var statusMenu: NSMenu!
   @IBOutlet weak var toggleMenuItem: NSMenuItem!
   
@@ -21,6 +21,8 @@ class StatusMenuController: NSObject {
     let note = NSUserNotification()
     note.title = "Time for a break"
     note.informativeText = "You've been sitting for 20 minutes"
+    note.actionButtonTitle = "Ok"
+    note.hasActionButton = true
     note.deliveryDate = Date(timeIntervalSinceNow: 0)
 
     notificationCenter.removeAllDeliveredNotifications()
@@ -39,11 +41,16 @@ class StatusMenuController: NSObject {
     }
   }
   
+  func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+    return true
+  }
+  
   override func awakeFromNib() {
     let icon = NSImage(named: "menuicon")
     icon?.isTemplate = true
     statusItem.image = icon
     statusItem.menu = statusMenu
+    notificationCenter.delegate = self
     
     toggle()
   }
